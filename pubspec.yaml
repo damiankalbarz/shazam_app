@@ -39,9 +39,15 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  audioplayers: ^0.20.1
-  permission_handler: ^10.0.0
-  http: ^0.13.3
+  dio: ^5.5.0
+  acr_cloud_sdk: ^2.0.2
+  avatar_glow: ^3.0.1
+  flutter_hooks: ^0.20.5
+  hooks_riverpod: ^2.5.1
+
+
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
