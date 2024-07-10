@@ -41,48 +41,61 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final vm = Provider.of<HomeViewModel>(context);
     return Scaffold(
-      backgroundColor: Color(0xFF042442),
+      backgroundColor: Colors.blueGrey,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child:
+        Column(
           children: [
-            Text(
-              'Tap to Shazam',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            SizedBox(height: 40),
-            AvatarGlow(
-              animate: vm.isRecognizing,
-              child: GestureDetector(
-                onTap: () => vm.isRecognizing ? vm.stopRecognizing() : vm.startRecognizing(),
-                child: Material(
-                  shape: CircleBorder(),
-                  elevation: 8,
-                  child: Container(
-                    padding: EdgeInsets.all(40),
-                    height: 200,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFF089af8),
+            SizedBox(height: 80),
+            Text("Shazam app",style: TextStyle(color: Colors.white, fontSize: 40),),
+            SizedBox(height: 100),
 
-                    ) ,
-                    child: Center(
-                      child: Icon(
-                        Icons.music_note_rounded,
-                        size: 100, // Rozmiar ikony
-                        color: Colors.white, // Kolor ikony
+            Container(
+              child:  Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Tap to Shazam',
+                    style: TextStyle(color: Colors.white, fontSize: 20, fontStyle: FontStyle.italic),
+                  ),
+                  SizedBox(height: 40),
+                  AvatarGlow(
+                    animate: vm.isRecognizing,
+                    child: GestureDetector(
+                      onTap: () => vm.isRecognizing ? vm.stopRecognizing() : vm.startRecognizing(),
+                      child: Material(
+                        shape: CircleBorder(),
+                        elevation: 8,
+                        child: Container(
+                          padding: EdgeInsets.all(40),
+                          height: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFF089af8),
+
+                          ) ,
+                          child: Center(
+                            child: Icon(
+                              Icons.music_note_rounded,
+                              size: 100, // Rozmiar ikony
+                              color: Colors.white, // Kolor ikony
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  )
+                ],
               ),
             )
           ],
-        ),
+        )
+
+
       ),
     );
   }
