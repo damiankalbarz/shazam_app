@@ -1,29 +1,45 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:shazam_app/song_screen.dart';
 import 'package:shazam_app/home_vm.dart';
 import 'package:shazam_app/models/Deezer_song_model.dart';
 
-
-class HomePage extends HookConsumerWidget {
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final vm = ref.watch(homeViewModel);
+  _HomePageState createState() => _HomePageState();
+}
 
-    useEffect(() {
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final vm = Provider.of<HomeViewModel>(context, listen: false);
+      vm.addListener(() {
+        if (vm.success && vm.currentSong != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SongScreen(song: vm.currentSong!),
+            ),
+          );
+        }
+      });
+    });
+  }
 
-        print("xddd");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SongScreen(song: vm.currentSong!),
-          ),
-        );
+  @override
+  void dispose() {
+    final vm = Provider.of<HomeViewModel>(context, listen: false);
+    vm.removeListener(() {});
+    vm.dispose();
+    super.dispose();
+  }
 
-    }, [vm.success, vm.currentSong]);
-
+  @override
+  Widget build(BuildContext context) {
+    final vm = Provider.of<HomeViewModel>(context);
     return Scaffold(
       backgroundColor: Color(0xFF042442),
       body: Container(
@@ -52,18 +68,22 @@ class HomePage extends HookConsumerWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(0xFF089af8),
-                    ),
-                    child: Image.asset(
-                      'assets/images/shazam-logo.png',
-                      color: Colors.white,
+
+                    ) ,
+                    child: Center(
+                      child: Icon(
+                        Icons.music_note_rounded,
+                        size: 100, // Rozmiar ikony
+                        color: Colors.white, // Kolor ikony
+                      ),
                     ),
                   ),
                 ),
               ),
             )
           ],
-        )),
-
+        ),
+      ),
     );
   }
 }

@@ -1,8 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:shazam_app/models/Deezer_song_model.dart';
 import 'package:shazam_app/service/song_service.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:acr_cloud_sdk/acr_cloud_sdk.dart';
-import 'package:flutter/cupertino.dart';
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel() {
@@ -31,21 +30,49 @@ class HomeViewModel extends ChangeNotifier {
 
   void searchSong(SongModel song) async {
     print(song);
-    final metaData = song?.metadata;
-    if (metaData != null && metaData.music != null && metaData.music!.isNotEmpty) {
-      final trackId = metaData.music![0].externalMetadata?.deezer?.track?.id;
-      try {
-        final res = await songService.getTrack(trackId);
-        currentSong = res;
-        success = true;
-        notifyListeners();
-      } catch (e) {
-        isRecognizing = false;
+
+    try {
+      final metaData = song.metadata;
+      print("1        /n");
+      if (metaData != null && metaData.music != null && metaData.music!.isNotEmpty) {
+        String? trackId;
+        print("2        /n");
+        for (var music in metaData.music!) {
+          trackId = music.externalMetadata?.deezer?.track?.id;
+          print("3        /n");
+          print(trackId);
+          if (trackId != null) {
+
+            try {
+              print("4        /n");
+              final res = await songService.getTrack(trackId);
+              currentSong = res;
+              success = true;
+              break;
+            } catch (e) {
+              print('Błąd podczas pobierania utworu: $e');
+              success = false;
+            }
+          }
+        }
+
+        if (trackId == null) {
+          success = false;
+        }
+      } else {
         success = false;
-        notifyListeners();
       }
+    } catch (e) {
+      print('Błąd podczas przetwarzania danych: $e');
+      success = false;
+    } finally {
+      isRecognizing = false;
+      notifyListeners();
     }
   }
+
+
+
 
   Future<void> startRecognizing() async {
     isRecognizing = true;
@@ -68,11 +95,4 @@ class HomeViewModel extends ChangeNotifier {
       print(e.toString());
     }
   }
-
-
 }
-
-final homeViewModel = ChangeNotifierProvider<HomeViewModel>((ref) {
-  print('>>> In homeViewModel');
-  return HomeViewModel();
-});

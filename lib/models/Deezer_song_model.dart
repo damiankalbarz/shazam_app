@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 DeezerSongModel deezerSongModelFromJson(String str) =>
@@ -65,34 +63,36 @@ class DeezerSongModel {
     required this.type,
   });
 
-  factory DeezerSongModel.fromJson(Map<String, dynamic> json) => DeezerSongModel(
-    id: json["id"],
-    readable: json["readable"],
-    title: json["title"],
-    titleShort: json["title_short"],
-    titleVersion: json["title_version"],
-    isrc: json["isrc"],
-    link: json["link"],
-    share: json["share"],
-    duration: json["duration"],
-    trackPosition: json["track_position"],
-    diskNumber: json["disk_number"],
-    rank: json["rank"],
-    releaseDate: DateTime.parse(json["release_date"]),
-    explicitLyrics: json["explicit_lyrics"],
-    explicitContentLyrics: json["explicit_content_lyrics"],
-    explicitContentCover: json["explicit_content_cover"],
-    preview: json["preview"],
-    bpm: json["bpm"]?.toDouble(),
-    gain: json["gain"]?.toDouble(),
-    availableCountries: List<String>.from(json["available_countries"].map((x) => x)),
-    contributors: List<Contributor>.from(json["contributors"].map((x) => Contributor.fromJson(x))),
-    md5Image: json["md5_image"],
-    trackToken: json["track_token"],
-    artist: Artist.fromJson(json["artist"]),
-    album: Album.fromJson(json["album"]),
-    type: json["type"],
-  );
+  factory DeezerSongModel.fromJson(Map<String, dynamic> json) {
+    return DeezerSongModel(
+      id: json["id"].toString(),
+      readable: json["readable"] ?? false,
+      title: json["title"] ?? "",
+      titleShort: json["title_short"] ?? "",
+      titleVersion: json["title_version"] ?? "",
+      isrc: json["isrc"] ?? "",
+      link: json["link"] ?? "",
+      share: json["share"].toString(), // Konwersja do String
+      duration: json["duration"].toString(), // Konwersja do String
+      trackPosition: json["track_position"] ?? 0,
+      diskNumber: json["disk_number"] ?? 0,
+      rank: json["rank"].toString(), // Konwersja do String
+      releaseDate: DateTime.tryParse(json["release_date"]) ?? DateTime.now(),
+      explicitLyrics: json["explicit_lyrics"] ?? false,
+      explicitContentLyrics: json["explicit_content_lyrics"] ?? 0,
+      explicitContentCover: json["explicit_content_cover"] ?? 0,
+      preview: json["preview"] ?? "",
+      bpm: json["bpm"]?.toDouble() ?? 0.0,
+      gain: json["gain"]?.toDouble() ?? 0.0,
+      availableCountries: List<String>.from(json["available_countries"] ?? []),
+      contributors: List<Contributor>.from((json["contributors"] ?? []).map((x) => Contributor.fromJson(x))),
+      md5Image: json["md5_image"] ?? "",
+      trackToken: json["track_token"] ?? "",
+      artist: Artist.fromJson(json["artist"] ?? {}),
+      album: Album.fromJson(json["album"] ?? {}),
+      type: json["type"] ?? "",
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id,
@@ -107,7 +107,7 @@ class DeezerSongModel {
     "track_position": trackPosition,
     "disk_number": diskNumber,
     "rank": rank,
-    "release_date": "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+    "release_date": releaseDate.toIso8601String(),
     "explicit_lyrics": explicitLyrics,
     "explicit_content_lyrics": explicitContentLyrics,
     "explicit_content_cover": explicitContentCover,
@@ -154,18 +154,18 @@ class Album {
   });
 
   factory Album.fromJson(Map<String, dynamic> json) => Album(
-    id: json["id"],
-    title: json["title"],
-    link: json["link"],
-    cover: json["cover"],
-    coverSmall: json["cover_small"],
-    coverMedium: json["cover_medium"],
-    coverBig: json["cover_big"],
-    coverXl: json["cover_xl"],
-    md5Image: json["md5_image"],
-    releaseDate: DateTime.parse(json["release_date"]),
-    tracklist: json["tracklist"],
-    type: json["type"],
+    id: json["id"].toString(),
+    title: json["title"] ?? "",
+    link: json["link"] ?? "",
+    cover: json["cover"] ?? "",
+    coverSmall: json["cover_small"] ?? "",
+    coverMedium: json["cover_medium"] ?? "",
+    coverBig: json["cover_big"] ?? "",
+    coverXl: json["cover_xl"] ?? "",
+    md5Image: json["md5_image"] ?? "",
+    releaseDate: DateTime.tryParse(json["release_date"]) ?? DateTime.now(),
+    tracklist: json["tracklist"] ?? "",
+    type: json["type"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -178,7 +178,7 @@ class Album {
     "cover_big": coverBig,
     "cover_xl": coverXl,
     "md5_image": md5Image,
-    "release_date": "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+    "release_date": releaseDate.toIso8601String(),
     "tracklist": tracklist,
     "type": type,
   };
@@ -214,18 +214,18 @@ class Artist {
   });
 
   factory Artist.fromJson(Map<String, dynamic> json) => Artist(
-    id: json["id"],
-    name: json["name"],
-    link: json["link"],
-    share: json["share"],
-    picture: json["picture"],
-    pictureSmall: json["picture_small"],
-    pictureMedium: json["picture_medium"],
-    pictureBig: json["picture_big"],
-    pictureXl: json["picture_xl"],
-    radio: json["radio"],
-    tracklist: json["tracklist"],
-    type: json["type"],
+    id: json["id"].toString(),
+    name: json["name"] ?? "",
+    link: json["link"] ?? "",
+    share: json["share"] ?? "",
+    picture: json["picture"] ?? "",
+    pictureSmall: json["picture_small"] ?? "",
+    pictureMedium: json["picture_medium"] ?? "",
+    pictureBig: json["picture_big"] ?? "",
+    pictureXl: json["picture_xl"] ?? "",
+    radio: json["radio"] ?? false,
+    tracklist: json["tracklist"] ?? "",
+    type: json["type"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -277,18 +277,18 @@ class Contributor {
 
   factory Contributor.fromJson(Map<String, dynamic> json) => Contributor(
     id: json["id"],
-    name: json["name"],
-    link: json["link"],
-    share: json["share"],
-    picture: json["picture"],
-    pictureSmall: json["picture_small"],
-    pictureMedium: json["picture_medium"],
-    pictureBig: json["picture_big"],
-    pictureXl: json["picture_xl"],
-    radio: json["radio"],
-    tracklist: json["tracklist"],
-    type: json["type"],
-    role: json["role"],
+    name: json["name"] ?? "",
+    link: json["link"] ?? "",
+    share: json["share"] ?? "",
+    picture: json["picture"] ?? "",
+    pictureSmall: json["picture_small"] ?? "",
+    pictureMedium: json["picture_medium"] ?? "",
+    pictureBig: json["picture_big"] ?? "",
+    pictureXl: json["picture_xl"] ?? "",
+    radio: json["radio"] ?? false,
+    tracklist: json["tracklist"] ?? "",
+    type: json["type"] ?? "",
+    role: json["role"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {

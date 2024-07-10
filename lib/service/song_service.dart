@@ -12,22 +12,26 @@ class SongService {
         baseUrl: 'https://api.deezer.com/track/');
     _dio = Dio(options);
   }
-  Future<DeezerSongModel> getTrack(id) async {
+
+  Future<DeezerSongModel> getTrack(String id) async {
     try {
-      final response = await _dio.get('$id',
+      final String url = 'https://api.deezer.com/track/$id'; // Twój właściwy endpoint
+      final response = await _dio.get(url,
           options: Options(headers: {
             'Content-type': 'application/json;charset=UTF-8',
             'Accept': 'application/json;charset=UTF-8',
           }));
       DeezerSongModel result = DeezerSongModel.fromJson(response.data);
       return result;
-    } on DioException catch (e) {
-      if (e.requestOptions != null) {
-        throw 'An error has occured';
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
+        print(e.response!.statusMessage);
       } else {
-        print(e.error);
-        throw '$e.error' ;
+        print(e.message);
       }
+      throw 'Wystąpił błąd podczas pobierania utworu';
     }
   }
 }
